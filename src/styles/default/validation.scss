@@ -1,0 +1,10 @@
+/* Example inline/default validation styles */
+input.invalid, button.invalid {
+  border-color: #FF0000;
+}
+
+.validation-error-container, .summary-error
+{
+  color: red;
+  text-transform: capitalize;
+}
