@@ -17,9 +17,39 @@
 
                     </div>
                 </article>
+                <a class="button is-primary m-sm" @click="showProjectModal = true">Create New Project</a>
+                <!--
                 <a class="button is-primary m-sm" @click="createNewProject()">Create New Project</a>
-                <a class="button is-info m-sm" @click="openExistingProject()">Or Open New Project</a>
-                <a class="button is-info m-sm" @click="openExampleProject()">Or View Example Project</a>
+                <a class="button is-info m-sm" @click="openExistingProject()">Or Open Existing Project</a>
+                <a class="button is-info m-sm" @click="openExampleProject()">Or View Example Project</a>-->
+            </div>
+        </div>
+        <div id="project-creator-modal" class="modal" :class="{ 'is-active': showProjectModal }">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <article class="message is-dark">
+                    <div class="message-header">
+                        <p>Project Templates</p>
+                    </div>
+                    <div class="message-body">
+                        <div id="project-container" class="columns">
+                            <div class="column">
+                                <ul>
+                                    <template v-for="(entry, index) in projectTemplates">
+                                        <li>
+                                            <button class="button is-info">{{entry.friendlyName}}</button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                {{entry.description}}
+                            </div>
+                        </div>
+
+                        <button class="button" @click="showProjectModal = false">Cancel</button>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -34,16 +64,21 @@ import {remote} from "electron";
 import router from "../router";
 import {EcsRxProject, exampleProject} from "@alchemist-editor/ecsrx";
 import {NamespaceNodeGroup} from "@alchemist-editor/dotnet";
+import {ProjectEntry, projectRegistry} from "@alchemist-editor/core";
 const {dialog} = remote;
 
 @Component({
-    components: {
-
-    }
+    components: {  }
 })
 export default class extends Vue {
     @Mutation("loadProject")
     public loadProject;
+
+    public showProjectModal = false;
+
+    public get projectTemplates(): Array<ProjectEntry>{
+        return projectRegistry.getProjects();
+    }
 
     public createNewProject() {
         const directory = dialog.showOpenDialog({properties: ['openDirectory']})[0];
