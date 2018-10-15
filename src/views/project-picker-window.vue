@@ -32,21 +32,65 @@
                         <p>Project Templates</p>
                     </div>
                     <div class="message-body">
-                        <div id="project-container" class="columns">
-                            <div class="column">
-                                <ul>
-                                    <template v-for="(entry, index) in projectTemplates">
-                                        <li>
-                                            <button class="button is-info">{{entry.friendlyName}}</button>
+                        <div id="project-container" class="tile is-ancestor">
+                            <div class="tile is-6 is-vertical is-parent">
+                                <div class="tile is-child box">
+                                    <ul>
+                                        <template v-for="(descriptor, index) in projectTemplates">
+                                            <li class="m-sm p-sm" @click="projectForm.projectType = descriptor.projectType"
+                                                :class="{ 'has-background-success': projectForm.projectType == descriptor.projectType, 'has-background-light': projectForm.projectType != descriptor.projectType }">
+                                                <span class="tag is-dark">{{descriptor.tagName}}</span>
+                                                <span class="m-l-md">{{descriptor.title}}</span>
+                                            </li>
+                                        </template>
+
+                                        <li class="m-sm p-sm has-background-light">
+                                            <span class="tag is-dark">ecsrx</span>
+                                            <span class="m-l-md">EcsRx Unity Project</span>
                                         </li>
-                                    </template>
-                                </ul>
+                                        <li class="m-sm p-sm has-background-light">
+                                            <span class="tag is-dark">ecsrx</span>
+                                            <span class="m-l-md">EcsRx MG Project</span>
+                                        </li>
+                                        <li class="m-sm p-sm has-background-light">
+                                            <span class="tag is-dark">mvc</span>
+                                            <span class="m-l-md">ASP MVC Project</span>
+                                        </li>
+
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="column">
-                                {{entry.description}}
+                            <div class="tile is-parent">
+                                <div class="tile is-child box">
+                                    {{projectTypeDescription}}
+                                </div>
                             </div>
                         </div>
-
+                        <div class="field is-horizontal">
+                            <label class="field-label is-normal">Project Name</label>
+                            <div class="field-body">
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="MyProject" v-model="projectForm.projectName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field is-horizontal">
+                            <label class="field-label is-normal">Location</label>
+                            <div class="field-body">
+                                <div class="field">
+                                    <div class="control">
+                                        <input class="input" type="text" placeholder="c:/some/directory" v-model="projectForm.directory">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-light" @click="selectDirectory">Browse</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="is-danger box" v-if="validationGroup != null" v-validation-summary="validationGroup"></div>
+                        <button class="button is-primary" :disabled="!isValid">Create</button>
                         <button class="button" @click="showProjectModal = false">Cancel</button>
                     </div>
                 </article>
@@ -62,28 +106,63 @@ import {Getter, State, Mutation} from "vuex-class";
 
 import {remote} from "electron";
 import router from "../router";
-import {EcsRxProject, exampleProject} from "@alchemist-editor/ecsrx";
-import {NamespaceNodeGroup} from "@alchemist-editor/dotnet";
-import {ProjectEntry, projectRegistry} from "@alchemist-editor/core";
+import { IProjectDescriptor, ProjectEntry, projectRegistry } from "@alchemist-editor/core";
+import { createRulesetFor, required, withDisplayName } from "@treacherous/decorators";
+import { createRuleset, ValidateWith } from "@treacherous/vue";
+
 const {dialog} = remote;
 
+class ProjectForm
+{
+  @required()
+  @withDisplayName("Project Type")
+  public projectType = "";
+
+  @required()
+  @withDisplayName("Project Name")
+  public projectName = "";
+
+  @required()
+  @withDisplayName("Project Directory")
+  public directory = "";
+}
+
+const projectFormRuleset = createRulesetFor(ProjectForm);
+const componentRuleset = createRuleset()
+  .forProperty("projectForm")
+  .addRuleset(projectFormRuleset)
+  .build();
+
 @Component({
-    components: {  }
+    components: {  },
+    mixins: [ValidateWith(componentRuleset, { withReactiveValidation: true, validateOnStart: true })]
 })
 export default class extends Vue {
     @Mutation("loadProject")
     public loadProject;
 
     public showProjectModal = false;
+    public projectForm = new ProjectForm();
 
-    public get projectTemplates(): Array<ProjectEntry>{
-        return projectRegistry.getProjects();
+    public get projectTemplates(): Array<IProjectDescriptor>{
+        return projectRegistry.getProjects().map(x => x.projectDescriptor);
     }
 
+    public get projectTypeDescription(): string
+    {
+      if(this.projectForm.projectType == "")
+      { return ""; }
+
+      const projectType = projectRegistry.getProject(this.projectForm.projectType);
+      return projectType.projectDescriptor.description;
+    }
+
+    public selectDirectory()
+    { this.projectForm.directory = dialog.showOpenDialog({properties: ['openDirectory']})[0]; }
+
+/*
     public createNewProject() {
         const directory = dialog.showOpenDialog({properties: ['openDirectory']})[0];
-        const newProject = new EcsRxProject("Example Project 2", directory);
-        newProject.nodeGroups.push(new NamespaceNodeGroup(true, "ExampleProject2"));
         this.loadProject(newProject);
 
         console.log("loading project", newProject);
@@ -100,11 +179,24 @@ export default class extends Vue {
         exampleProject.outputDirectory = directory;
         this.loadProject(exampleProject);
         router.push('editor');
-    }
+    }*/
 }
 </script>
 
 <style lang="scss">
     @import "../styles/default/theme";
+
+    #project-creator-modal
+    {
+        .modal-content
+        {
+            width: 75vw;
+        }
+
+        #project-container
+        {
+            min-height: 50vh;
+        }
+    }
 
 </style>

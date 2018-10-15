@@ -19,7 +19,7 @@ import store from "./stores/store"
 import "./filters/truncate";
 import "./filters/capitalize";
 
-import {nodeRegistry, nodeGeneratorRegistry, projectRegistry, exampleProject} from "@alchemist-editor/core";
+import {nodeRegistry, nodeGeneratorRegistry, projectRegistry} from "@alchemist-editor/core";
 
 import {viewStrategyRegistry} from "@treacherous/view";
 import {TooltipViewStrategy} from "@/validation/view-strats/tooltip-view-strategy";
@@ -39,10 +39,6 @@ const startApp = () => {
 
 const registerNodes = () => {
     nodeRegistry.registerAllNodes();
-};
-
-const loadExampleProject = (vue: Vue) => {
-    vue.$store.commit("loadProject", exampleProject);
 };
 
 const initPlugin = async (plugin: any) =>
