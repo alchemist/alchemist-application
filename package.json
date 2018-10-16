@@ -15,8 +15,8 @@
   "dependencies": {
     "@treacherous/core": "^0.17.6",
     "@treacherous/decorators": "^0.2.3",
-    "@treacherous/view": "^0.4.2",
-    "@treacherous/vue": "^0.3.2",
+    "@treacherous/view": "^0.4.3",
+    "@treacherous/vue": "^0.3.3",
     "@alchemist-editor/core": "^0.1.4",
     "@alchemist-editor/dotnet": "^0.1.2",
     "@alchemist-editor/ecsrx": "^0.1.1",
@@ -52,6 +52,7 @@
     "@types/pubsub-js": "^1.5.18",
     "@types/webpack": "^4.4.11",
     "@types/fs-extra": "^5.0.4",
+    "@types/vue-router": "^2.0.0",
     "@vue/cli-plugin-typescript": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
     "cross-env": "^5.2.0",

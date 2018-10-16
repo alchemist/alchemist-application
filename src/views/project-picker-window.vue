@@ -84,13 +84,13 @@
                                 </div>
                                 <div class="field">
                                     <div class="control">
-                                        <button class="button is-light" @click="selectDirectory">Browse</button>
+                                        <button class="button is-light" @click="selectDirectory()">Browse</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="is-danger box" v-if="validationGroup != null" v-validation-summary="validationGroup"></div>
-                        <button class="button is-primary" :disabled="!isValid">Create</button>
+                        <div class="is-danger box" v-if="validationGroup != null && !isValid" v-validation-summary="validationGroup"></div>
+                        <button class="button is-primary" @click="createNewProject()">Create</button>
                         <button class="button" @click="showProjectModal = false">Cancel</button>
                     </div>
                 </article>
@@ -107,7 +107,7 @@ import {Getter, State, Mutation} from "vuex-class";
 import {remote} from "electron";
 import router from "../router";
 import { IProjectDescriptor, ProjectEntry, projectRegistry } from "@alchemist-editor/core";
-import { createRulesetFor, required, withDisplayName } from "@treacherous/decorators";
+import { createRulesetFor, required, withDisplayName, regex } from "@treacherous/decorators";
 import { createRuleset, ValidateWith } from "@treacherous/vue";
 
 const {dialog} = remote;
@@ -119,6 +119,7 @@ class ProjectForm
   public projectType = "";
 
   @required()
+  @regex(/^[\w]*$/g, true, "Should contain only alphanumeric characters")
   @withDisplayName("Project Name")
   public projectName = "";
 
@@ -150,15 +151,38 @@ export default class extends Vue {
 
     public get projectTypeDescription(): string
     {
-      if(this.projectForm.projectType == "")
-      { return ""; }
+      const projectEntry = this.selectedProjectEntry;
+      if(projectEntry == null) { return ""; }
 
-      const projectType = projectRegistry.getProject(this.projectForm.projectType);
-      return projectType.projectDescriptor.description;
+      return projectEntry.projectDescriptor.description;
+    }
+
+    public get selectedProjectEntry(): ProjectEntry
+    {
+      if(this.projectForm.projectType == "") { return null; }
+      return projectRegistry.getProject(this.projectForm.projectType);
     }
 
     public selectDirectory()
-    { this.projectForm.directory = dialog.showOpenDialog({properties: ['openDirectory']})[0]; }
+    {
+      const dialogResult = dialog.showOpenDialog({properties: ['openDirectory']});
+
+      if(dialogResult.length > 0)
+      { this.projectForm.directory = dialogResult[0]; }
+    }
+
+    public async createNewProject() {
+        const isValid = await (<any>this).validationGroup.validate();
+        if(!isValid) { return; }
+
+        const projectEntry = this.selectedProjectEntry;
+        const projectFactory = projectEntry.projectFactory;
+        const project = projectFactory.create(this.projectForm.projectType, this.projectForm.projectName, this.projectForm.directory);
+        this.loadProject(project);
+
+        console.log("loading project", project);
+        router.push('editor');
+    }
 
 /*
     public createNewProject() {
