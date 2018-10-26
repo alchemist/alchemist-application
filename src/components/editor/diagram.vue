@@ -25,7 +25,15 @@
 
 <script lang="ts">
     import {Prop, Vue, Component} from "vue-property-decorator";
-    import {IProject, NodeEntry, nodeRegistry, Point, INodeGroup} from "@alchemist-editor/core";
+    import {
+      IProject,
+      NodeEntry,
+      nodeRegistry,
+      Point,
+      INodeGroup,
+      projectRegistry,
+      IProjectDescriptor
+    } from "@alchemist-editor/core";
     import {State} from "vuex-class";
     import { VueContext } from 'vue-context';
     import {default as VirtualWorkspace} from "./virtual-workspace.vue";
@@ -44,6 +52,8 @@
         @State(state => state.editor.headerHeight)
         public headerHeight: number;
 
+        public compatibleNodes: NodeEntry[];
+
         public get selectedNodeGroup(): INodeGroup{
             if(this.project.nodeGroups.length <= this.selectedGroupIndex)
             { return null; }
@@ -52,9 +62,9 @@
         }
 
         public get nodeCategories() {
-            const availableNodes = nodeRegistry.getNodes();
+
             const nodeCategories = {};
-            availableNodes.forEach(node => {
+            this.compatibleNodes.forEach(node => {
 
                 if(!nodeCategories.hasOwnProperty(node.category))
                 { nodeCategories[node.category] = []; }
@@ -108,6 +118,14 @@
             this.$store.commit('selectNode', null);
 
             //this.createDotAtPoint(evt);
+        }
+
+        public onMounted()
+        {
+          const projectDescriptor = projectRegistry.getProject(this.project.projectType);
+          const compatibleNodeTypes = projectDescriptor.compatibleNodeTypeIds;
+          const availableNodes = nodeRegistry.getNodes();
+          this.compatibleNodes = availableNodes.filter(x => compatibleNodeTypes.indexOf(x.nodeTypeId) >= 0);
         }
     }
 </script>
