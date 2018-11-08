@@ -52,7 +52,7 @@
         @State(state => state.editor.headerHeight)
         public headerHeight: number;
 
-        public compatibleNodes: NodeEntry[];
+        public compatibleNodes: NodeEntry[] = [];
 
         public get selectedNodeGroup(): INodeGroup{
             if(this.project.nodeGroups.length <= this.selectedGroupIndex)
@@ -120,12 +120,13 @@
             //this.createDotAtPoint(evt);
         }
 
-        public onMounted()
+        public mounted()
         {
-          const projectDescriptor = projectRegistry.getProject(this.project.projectType);
-          const compatibleNodeTypes = projectDescriptor.compatibleNodeTypeIds;
+          const projectEntry = projectRegistry.getProject(this.project.projectType);
+          const compatibleNodeTypes = projectEntry.projectDescriptor.compatibleNodeTypeIds;
           const availableNodes = nodeRegistry.getNodes();
           this.compatibleNodes = availableNodes.filter(x => compatibleNodeTypes.indexOf(x.nodeTypeId) >= 0);
+          console.log("COMPATIBLE", this.compatibleNodes, availableNodes);
         }
     }
 </script>
