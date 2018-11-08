@@ -1,12 +1,10 @@
-import {INode} from "@alchemist-editor/core";
+import { INode, ProjectState } from "@alchemist-editor/core";
 import {EditorState} from "@/stores/modules/editor/editor-state";
 
 export class EditorMutations
 {
     public selectNode = (state: EditorState, node: INode): void =>
-    {
-        state.selectedNode = node;
-    };
+    { state.selectedNode = node; };
 
     public updateNodeErrors = (state: EditorState, nodeError: { nodeId: string, errors: any }) =>
     { state.nodeErrors[nodeError.nodeId] = nodeError.errors; };

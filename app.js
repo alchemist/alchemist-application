@@ -4,13 +4,20 @@ const nodeEnv = process.env.NODE_ENV.toLowerCase();
 const isDevVersion = nodeEnv === 'dev' || nodeEnv === "inweb";
 
 let url;
+let rootUrl;
 if (isDevVersion)
-{ url = 'http://localhost:8080/'; }
+{
+    rootUrl = 'http://localhost:8080/'
+    url = 'http://localhost:8080/';
+}
 else
-{ url = `file://${process.cwd()}/dist/index.html`; }
+{
+    rootUrl = `file://${process.cwd()}/dist/`;
+    url = `${rootUrl}/index.html`;
+}
 
 app.on('ready', () => {
-    let window = new BrowserWindow({width: 800, height: 600});
+    let window = new BrowserWindow({width: 800, height: 600, icon: `file://${process.cwd()}/public/favicon.ico`});
     window.toggleDevTools();
 
     if(isDevVersion)

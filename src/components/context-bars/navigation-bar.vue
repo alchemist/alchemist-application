@@ -1,12 +1,14 @@
 <template>
-    <tree id="project-tree" :data="projectTreeData">
+    <tree id="project-tree" ref="tree" :data="projectTreeData">
         <span class="tree-text" slot-scope="{ node }">
             <template v-if="!node.data.type">
                 <i class="fa" :class="[node.expanded() ? 'fa-folder-open' : 'fa-folder']"></i>
                 {{ node.text }}
             </template>
             <template v-if="node.data.type">
-                <span class="tag is-black">C</span>{{node.text}}
+                <div class="tree-node-content" :class="{ 'is-selected-node': node == selectedNode }">
+                    <span :node-type="node.data.type.id" class="tag tree-node-element"></span>{{node.text}}
+                </div>
             </template>
         </span>
     </tree>
@@ -16,7 +18,7 @@
 
 import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
 import {IProject, INodeGroup, INode} from "@alchemist-editor/core";
-import {State} from "vuex-class";
+import { Mutation, State } from "vuex-class";
 import Tree from "liquor-tree";
 
 @Component({
@@ -26,6 +28,30 @@ export default class extends Vue {
 
     @State(state => state.project.activeProject)
     public project: IProject;
+
+    @Mutation('selectNode')
+    public changeSelectedNode;
+
+    @State(state => state.editor.selectedNode)
+    public selectedNode;
+
+    @Watch("selectedNode")
+    public updateSelection(newNode: INode)
+    {
+      const tree = (<any>this.$refs.tree);
+      const currentSelection = tree.find({state: { selected: true }});
+
+      if(currentSelection)
+      { currentSelection.select(false); }
+
+      if(newNode == null) { return; }
+
+      const selection = tree.find(node => {
+        return node.data.id == newNode.id;
+      });
+
+      selection.select(true);
+    }
 
     @Watch("project")
     public get projectTreeData()
@@ -53,18 +79,47 @@ export default class extends Vue {
 
         for(const node of nodeGroup.nodes)
         {
-            const treeSubNode = { text: node.data.name, data: { type: node.type.id } };
+            const treeSubNode = { text: node.data.name, data: node };
             treeNode.children.push(treeSubNode);
         }
 
         return treeNode;
     }
+
+    public mounted()
+    {
+      const tree = (<any>this.$refs.tree);
+      tree.$on("node:selected", (node) => {
+        if(!node.data.id) { return; }
+
+        this.changeSelectedNode(node.data);
+        console.log("SELECTED", node.data);
+      });
+    }
 }
 </script>
 
 <style lang="scss">
-    #project-tree .tree-node.selected
+    #project-tree
     {
-        background-color: rgba(0,0,0,0.5);
+        width: 100%;
+
+        .tree-node-content.is-selected-node
+        {
+            background-color: rgba(0,0,0,0.5);
+        }
+    }
+
+    #project-tree .tree-node
+    {
+        &.selected .tree-content
+        {
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .tree-content:hover
+        {
+            background-color: rgba(0,0,0,0.2);
+        }
     }
 </style>
