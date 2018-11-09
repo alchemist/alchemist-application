@@ -106,7 +106,7 @@ import {Getter, State, Mutation} from "vuex-class";
 
 import {remote} from "electron";
 import router from "../router";
-import { IProjectDescriptor, ProjectEntry, projectRegistry } from "@alchemist-editor/core";
+import { IProjectDescriptor, ProjectEntry, projectRegistry } from "@alchemist/core";
 import { createRulesetFor, required, withDisplayName, regex } from "@treacherous/decorators";
 import { createRuleset, ValidateWith } from "@treacherous/vue";
 

@@ -2,12 +2,14 @@
     <nav id="main-toolbar" class="navbar">
         <div class="navbar-start">
             <div class="navbar-item">
-                <a class="button" @click="saveProject()">
+                <a class="button tooltip is-tooltip-right" data-tooltip="Save project changes" @click="saveProject()">
                     <span class="icon">
                       <i class="fas fa-save"></i>
                     </span>
                 </a>
-                <a class="button" @click="compileCode()">
+            </div>
+            <div class="navbar-item">
+                <a class="button tooltip" data-tooltip="Generate project code" @click="compileCode()">
                     <span class="icon">
                       <i class="fas fa-ship"></i>
                     </span>
@@ -15,14 +17,14 @@
             </div>
             <hr class="navbar-divider">
             <div class="navbar-item">
-                <a class="button" :class="{'is-success': isContextSidebarVisible}" @click="showContextSideBar(!isContextSidebarVisible)">
+                <a class="button tooltip" data-tooltip="Show codegen preview bar" :class="{'is-success': isContextSidebarVisible}" @click="showContextSideBar(!isContextSidebarVisible)">
                     <span class="icon">
                       <i class="fas fa-columns"></i>
                     </span>
                 </a>
             </div>
             <div class="navbar-item">
-                <a class="button" :class="{'is-success': isFolderSidebarVisible}" @click="showFolderSideBar(!isFolderSidebarVisible)">
+                <a class="button tooltip" data-tooltip="Show folder exporer bar" :class="{'is-success': isFolderSidebarVisible}" @click="showFolderSideBar(!isFolderSidebarVisible)">
                     <span class="icon">
                       <i class="fas fa-columns"></i>
                     </span>
@@ -35,7 +37,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Mutation, State} from "vuex-class";
-    import {IProject, nodeGeneratorRegistry} from "@alchemist-editor/core";
+    import {IProject, nodeGeneratorRegistry} from "@alchemist/core";
     import {generationManager} from "../../helpers/generation-helper"
 
     import { remote } from 'electron';

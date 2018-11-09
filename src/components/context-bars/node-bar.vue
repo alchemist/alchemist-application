@@ -39,7 +39,7 @@
 import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
 import {Getter, State} from "vuex-class";
 import {debounce} from "lodash";
-import {nodeGeneratorRegistry, INodeGroup, INode, IGeneratedCode, IProject} from "@alchemist-editor/core";
+import {nodeGeneratorRegistry, INodeGroup, INode, IGeneratedCode, IProject} from "@alchemist/core";
 
 import CodegenPreview from "./codegen-preview.vue";
 import {generationManager} from "../../helpers/generation-helper";

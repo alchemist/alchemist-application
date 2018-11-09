@@ -16,7 +16,7 @@
     import "brace/theme/monokai";
 
     import {Prop, Component, Vue} from 'vue-property-decorator';
-    import {IGeneratedCode} from "@alchemist-editor/core";
+    import {IGeneratedCode} from "@alchemist/core";
 
     @Component({
         components: {

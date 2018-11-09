@@ -14,7 +14,7 @@
 
 <script lang="ts">
     import {Prop, Vue, Component} from "vue-property-decorator";
-    import {Point, IWorkspaceConfig} from "@alchemist-editor/core";
+    import {Point, IWorkspaceConfig} from "@alchemist/core";
     import {default as VirtualScrollbar} from "./virtual-scrollbar.vue";
 
     @Component({

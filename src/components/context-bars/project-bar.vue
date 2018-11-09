@@ -24,7 +24,7 @@
 <script lang="ts">
 
 import {Prop, Component, Vue} from 'vue-property-decorator';
-import {IProject} from "@alchemist-editor/core";
+import {IProject} from "@alchemist/core";
 import {State} from "vuex-class";
 
 @Component

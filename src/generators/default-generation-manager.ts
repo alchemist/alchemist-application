@@ -1,4 +1,4 @@
-import {IGenerationManager, IProject, GeneratedCode, INodeGenerator, INode, INodeGroup, IGeneratedCode, IProjectGenerator, nodeGeneratorRegistry} from "@alchemist-editor/core";
+import {IGenerationManager, IProject, GeneratedCode, INodeGenerator, INode, INodeGroup, IGeneratedCode, IProjectGenerator, nodeGeneratorRegistry} from "@alchemist/core";
 //import {formatCode} from "../formatter/csharp-formatter";
 
 import { remote } from 'electron';

@@ -33,7 +33,7 @@
       INodeGroup,
       projectRegistry,
       IProjectDescriptor
-    } from "@alchemist-editor/core";
+    } from "@alchemist/core";
     import {State} from "vuex-class";
     import { VueContext } from 'vue-context';
     import {default as VirtualWorkspace} from "./virtual-workspace.vue";

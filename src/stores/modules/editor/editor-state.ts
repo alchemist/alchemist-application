@@ -1,4 +1,4 @@
-import {INode} from "@alchemist-editor/core";
+import {INode} from "@alchemist/core";
 
 export interface NodeErrors
 {

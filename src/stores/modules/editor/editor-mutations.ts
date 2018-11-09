@@ -1,4 +1,4 @@
-import { INode, ProjectState } from "@alchemist-editor/core";
+import { INode, ProjectState } from "@alchemist/core";
 import {EditorState} from "@/stores/modules/editor/editor-state";
 
 export class EditorMutations

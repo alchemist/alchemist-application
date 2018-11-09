@@ -16,7 +16,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Mutation, State} from "vuex-class";
-    import {IProject} from "@alchemist-editor/core";
+    import {IProject} from "@alchemist/core";
 
     @Component
     export default class extends Vue

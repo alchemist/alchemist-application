@@ -1,4 +1,4 @@
-import {INodeGroup} from "@alchemist-editor/core";
+import {INodeGroup} from "@alchemist/core";
 import {EditorState} from "@/stores/modules/editor/editor-state";
 
 export class EditorGetters

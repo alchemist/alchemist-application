@@ -17,7 +17,7 @@
 <script lang="ts">
 
 import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
-import {IProject, INodeGroup, INode} from "@alchemist-editor/core";
+import {IProject, INodeGroup, INode} from "@alchemist/core";
 import { Mutation, State } from "vuex-class";
 import Tree from "liquor-tree";
 
@@ -39,10 +39,7 @@ export default class extends Vue {
     public updateSelection(newNode: INode)
     {
       const tree = (<any>this.$refs.tree);
-      const currentSelection = tree.find({state: { selected: true }});
-
-      if(currentSelection)
-      { currentSelection.select(false); }
+      tree.selected().unselect();
 
       if(newNode == null) { return; }
 
@@ -88,13 +85,11 @@ export default class extends Vue {
 
     public mounted()
     {
-      const tree = (<any>this.$refs.tree);
-      tree.$on("node:selected", (node) => {
-        if(!node.data.id) { return; }
-
-        this.changeSelectedNode(node.data);
-        console.log("SELECTED", node.data);
-      });
+        const tree = (<any>this.$refs.tree);
+        tree.$on("node:selected", (node) => {
+            if(!node.data.id) { return; }
+            this.changeSelectedNode(node.data);
+        });
     }
 }
 </script>
