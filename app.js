@@ -7,7 +7,7 @@ let url;
 let rootUrl;
 if (isDevVersion)
 {
-    rootUrl = 'http://localhost:8080/'
+    rootUrl = 'http://localhost:8080/';
     url = 'http://localhost:8080/';
 }
 else
@@ -23,5 +23,6 @@ app.on('ready', () => {
     if(isDevVersion)
     { require('vue-devtools').install(); }
 
+    console.log("Loading App", url);
     window.loadURL(url);
 });

@@ -14,6 +14,7 @@ module.exports = config => {
     console.log("SERVING ELECTRON WEB");
     config.target = "web";
     config.externals = config.externals || {};
+    config.externals["electron-edge-js"] = 'require("electron-edge-js")';
     config.externals["electron"] = 'require("electron")';
     config.externals["net"] = 'require("net")';
     config.externals["remote"] = 'require("remote")';

@@ -19,7 +19,13 @@ import store from "./stores/store"
 import "./filters/truncate";
 import "./filters/capitalize";
 
-import {nodeRegistry, nodeGeneratorRegistry, projectRegistry} from "@alchemist/core";
+import {
+  nodeRegistry,
+  nodeGeneratorRegistry,
+  projectRegistry,
+  PluginContext,
+  codeProcessorRegistry, projectGeneratorRegistry
+} from "@alchemist/core";
 
 import {viewStrategyRegistry} from "@treacherous/view";
 import {TooltipViewStrategy} from "@/validation/view-strats/tooltip-view-strategy";
@@ -29,7 +35,17 @@ viewStrategyRegistry.registerStrategy(new TooltipViewStrategy());
 
 Vue.config.productionTip = false;
 
+const pluginContext: PluginContext = {
+  codeProcessorRegistry: codeProcessorRegistry,
+  nodeGeneratorRegistry: nodeGeneratorRegistry,
+  nodeRegistry: nodeRegistry,
+  projectGeneratorRegistry: projectGeneratorRegistry,
+  projectRegistry: projectRegistry,
+  store: store
+};
+
 const startApp = () => {
+    console.log("Starting App");
     return new Vue({
         router,
         store,
@@ -43,7 +59,8 @@ const registerNodes = () => {
 
 const initPlugin = async (plugin: any) =>
 {
-    await plugin.setup(nodeRegistry, nodeGeneratorRegistry, projectRegistry, store)
+    console.log("Starting Plugin", plugin);
+    await plugin.setup(pluginContext)
 };
 
 const plugins = [
@@ -57,8 +74,10 @@ const loadedPlugins = [
 ];
 
 const loadAllPlugins = async (plugins) => {
+    console.log("Found Plugins", plugins);
     await plugins.forEach(await initPlugin);
 };
+
 
 //Promise.all(plugins.map(x => import(x))) // TODO: This needs to be re-added later
 Promise.all(loadedPlugins)
@@ -66,5 +85,3 @@ Promise.all(loadedPlugins)
     .then(registerNodes)
     .then(startApp);
 //    .then(loadExampleProject);
-
-
