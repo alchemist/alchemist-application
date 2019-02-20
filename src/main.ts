@@ -28,7 +28,7 @@ import {
 } from "@alchemist/core";
 
 import {viewStrategyRegistry} from "@treacherous/view";
-import {TooltipViewStrategy} from "@/validation/view-strats/tooltip-view-strategy";
+import {TooltipViewStrategy} from "./validation/view-strats/tooltip-view-strategy";
 const inlineStrat = viewStrategyRegistry.getStrategyNamed("inline");
 viewStrategyRegistry.unregisterStrategy(inlineStrat);
 viewStrategyRegistry.registerStrategy(new TooltipViewStrategy());

@@ -38,7 +38,7 @@
 <script lang="ts">
 import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
 import {Getter, State} from "vuex-class";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {nodeGeneratorRegistry, INodeGroup, INode, IGeneratedCode, IProject} from "@alchemist/core";
 
 import CodegenPreview from "./codegen-preview.vue";

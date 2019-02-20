@@ -67,24 +67,12 @@
 
             await fs.writeFile(`${this.project.outputDirectory}/project.diagram`, projectJson);
 
-            Vue["toasted"].success(
-                "Project saved", {
-                    duration: 3000,
-                    icon : {
-                        name : 'save'
-                    }
-                });
+            Vue["toasted"].success("Project saved", {duration: 3000, icon: "save" });
         }
 
         public async compileCode() {
             await generationManager.generateAll(this.project);
-            Vue["toasted"].success(
-                "Code generation complete", {
-                    duration: 3000,
-                    icon : {
-                        name : 'ship'
-                    }
-                });
+            Vue["toasted"].success("Code generation complete", { duration: 3000, icon: "ship" });
         }
     }
 

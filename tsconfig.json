@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "esnext",
+    "module": "commonjs",
     "jsx": "preserve",
+    "esModuleInterop": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
     "moduleResolution": "node",
@@ -10,6 +11,7 @@
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "declaration": false,
     "baseUrl": ".",
     "types": [
       "node"    ],
