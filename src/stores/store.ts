@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {EditorState} from "@/stores/modules/editor/editor-state";
-import {EditorMutations} from "@/stores/modules/editor/editor-mutations";
-import {EditorGetters} from "@/stores/modules/editor/editor-getters";
+import {EditorState} from "./modules/editor/editor-state";
+import {EditorMutations} from "./modules/editor/editor-mutations";
+import {EditorGetters} from "./modules/editor/editor-getters";
 import {ProjectState, ProjectMutations, ProjectGetters} from "@alchemist/core";
 
 Vue.use(Vuex);

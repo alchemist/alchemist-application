@@ -24,15 +24,14 @@
 </template>
 
 <script lang="ts">
-    import {Prop, Vue, Component} from "vue-property-decorator";
+    import {Vue, Component} from "vue-property-decorator";
     import {
       IProject,
       NodeEntry,
       nodeRegistry,
       Point,
       INodeGroup,
-      projectRegistry,
-      IProjectDescriptor
+      projectRegistry
     } from "@alchemist/core";
     import {State} from "vuex-class";
     import { VueContext } from 'vue-context';

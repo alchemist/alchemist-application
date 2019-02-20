@@ -136,5 +136,6 @@ namespace CodeGen.Generators
                 .NormalizeWhitespace()
                 .ToFullString();
         }
+       
     }
 }
