@@ -1,11 +1,16 @@
 {
   "name": "@alchemist/application",
+  "description": "Alchemist, the node based code generation tool",
   "version": "0.1.0",
+  "main": "app.js",
+  "productName": "Alchemist",
   "private": true,
   "scripts": {
     "build": "webpack",
     "build-reasons": "webpack --display-reasons",
-    "electron": "electron app.js"
+    "electron": "electron app.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "@treacherous/core": "^0.17.6",
@@ -18,7 +23,6 @@
     "@fortawesome/fontawesome-free": "^5.7.2",
     "bulma": "^0.7.4",
     "bulma-extensions": "^6.0.1",
-    "electron": "^3.1.2",
     "electron-edge-js": "^10.11.0",
     "highlight.js": "^9.14.2",
     "lodash-es": "^4.17.11",
@@ -58,9 +62,33 @@
     "typescript": "^3.3.3",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3",
-    "electron-builder": "^20.38.5"
+    "electron-builder": "^20.38.5",
+    "electron": "^3.1.2"
   },
   "build": {
-    "app-id": "alchemist"
+    "appId": "com.alchemist",
+    "productName": "Alchemist",
+    "compression": "store",
+    "files": [
+      "!node_modules/**/*",
+      "public/**/*",
+      "app.js",
+      "package.json",
+      {
+        "from": "node_modules",
+        "to": "node_modules",
+        "filter": [
+          "vue-devtools/**/*",
+          "fs-extra/**/*",
+          "universalify/**/*",
+          "graceful-fs/**/*",
+          "jsonfile/**/*",
+          "electron-edge-js/**/*"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "public/favicon.png"
+    }
   }
 }

@@ -1,6 +1,7 @@
 const {app, BrowserWindow} = require('electron');
-rootUrl = `file://${process.cwd()}/public/`;
-url = `${rootUrl}/index.html`;
+
+const rootUrl = `${__dirname}/public`;
+const url = `${rootUrl}/index.html`;
 
 app.on('ready', () => {
     let window = new BrowserWindow({
