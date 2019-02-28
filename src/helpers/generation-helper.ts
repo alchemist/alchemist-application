@@ -1,4 +1,4 @@
 import {IGenerationManager, DefaultGenerationManager} from "@alchemist/core";
-import {DefaultFileSystem} from "../filesystem/default-file-system";
+import {fileSystem} from "./filesystem-helper";
 
-export const generationManager: IGenerationManager = new DefaultGenerationManager(new DefaultFileSystem());
+export const generationManager: IGenerationManager = new DefaultGenerationManager(fileSystem);

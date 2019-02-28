@@ -30,7 +30,7 @@
 
 import { Component, Vue } from 'vue-property-decorator';
 import {Getter, Mutation, State} from "vuex-class";
-import {debounce} from "lodash-es";
+import debounce from "lodash/debounce";
 
 import {default as Diagram} from "../components/editor/diagram.vue";
 import {default as ProjectBar} from "../components/context-bars/project-bar.vue";

@@ -1,12 +1,12 @@
-const path = require('path');
+const {resolve} = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     target: "electron-renderer",
     entry: './src/main.ts',
     output: {
-        path: path.resolve(__dirname, './public/app'),
+        path: resolve(__dirname, './public/app'),
         publicPath: '/public/app',
         filename: 'app.js',
         libraryTarget: 'commonjs2'
@@ -57,7 +57,8 @@ module.exports = {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js'
-        }
+        }/*,
+        modules: ["../../node_modules"]*/
     },
     externals: [
         "electron",
@@ -71,7 +72,28 @@ module.exports = {
         "fs",
         "buffer",
         "system",
-        "file"
+        "file",
+        "@treacherous/core",
+        "@treacherous/view",
+        "@treacherous/vue",
+        "@treacherous/decorators",
+        "@alchemist/core",
+        "uuid",
+        "interactjs",
+        "lodash-es",
+        "tslib",
+        "vue",
+        "vue-class-component",
+        "vue-property-decorator",
+        "vuex",
+        "vuex-class",
+        "vue2-ace-editor",
+        "vue-router",
+        "core-js",
+        "highlight.js",
+        "liquor-tree",
+        "vue-toasted",
+        "vue-context"
     ],
     optimization: {
         minimize: false,
