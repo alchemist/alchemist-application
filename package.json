@@ -1,0 +1,92 @@
+{
+  "name": "@alchemist/application",
+  "description": "Alchemist, the node based code generation tool",
+  "version": "0.1.0",
+  "main": "app.js",
+  "productName": "Alchemist",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "build-reasons": "webpack --display-reasons",
+    "electron": "electron app.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "@treacherous/core": "^0.17.6",
+    "@treacherous/decorators": "^0.2.3",
+    "@treacherous/view": "^0.4.3",
+    "@treacherous/vue": "^0.3.3",
+    "@alchemist/core": "^0.2.1",
+    "@fortawesome/fontawesome-free": "^5.7.2",
+    "bulma": "^0.7.4",
+    "bulma-extensions": "^6.0.1",
+    "electron-edge-js": "^10.11.0",
+    "highlight.js": "^9.14.2",
+    "lodash": "^4.17.11",
+    "uuid": "^3.3.2",
+    "vue": "^2.6.6",
+    "vue-class-component": "^7.0.1",
+    "vue-property-decorator": "^7.3.0",
+    "vue-router": "^3.0.2",
+    "vue2-ace-editor": "^0.0.13",
+    "vue-toasted": "^1.1.26",
+    "liquor-tree": "^0.2.53",
+    "vuex": "^3.1.0",
+    "vuex-class": "^0.3.1",
+    "interactjs": "^1.3.4",
+    "vue-context": "^3.4.0",
+    "fs-extra": "^7.0.1",
+    "core-js": "^2.6.5"
+  },
+  "devDependencies": {
+    "@types/uuid": "^3.4.4",
+    "@types/ace": "^0.0.40",
+    "@types/pubsub-js": "^1.5.18",
+    "@types/fs-extra": "^5.0.4",
+    "@types/vue-router": "^2.0.0",
+    "@types/lodash-es": "^4.17.2",
+    "cross-env": "^5.2.0",
+    "node-sass": "^4.11.0",
+    "css-loader": "^2.1.0",
+    "sass-loader": "^7.1.0",
+    "file-loader": "^3.0.1",
+    "url-loader": "^1.1.2",
+    "ts-loader": "^5.3.3",
+    "vue-loader": "^15.6.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-devtools": "^4.1.4",
+    "vue-template-compiler": "^2.6.6",
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "electron-builder": "^20.38.5",
+    "electron": "^3.1.2"
+  },
+  "build": {
+    "appId": "com.alchemist",
+    "productName": "Alchemist",
+    "compression": "store",
+    "files": [
+      "!node_modules/**/*",
+      "public/**/*",
+      "app.js",
+      "package.json",
+      {
+        "from": "node_modules",
+        "to": "node_modules",
+        "filter": [
+          "vue-devtools/**/*",
+          "fs-extra/**/*",
+          "universalify/**/*",
+          "graceful-fs/**/*",
+          "jsonfile/**/*",
+          "electron-edge-js/**/*"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "public/favicon.png"
+    }
+  }
+}
