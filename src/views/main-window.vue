@@ -9,7 +9,7 @@
         </div>
         <div id="main-area" class="hero-body m-none p-none is-fullwidth is-fullheight">
             <div id="main-section">
-                <div id="side-bar-left" v-if="showFolderSideBar">
+                <div id="side-bar-left" class="has-background-grey" v-if="showFolderSideBar">
                     <navigation-bar></navigation-bar>
                 </div>
                 <div id="editor-section">

@@ -1,17 +1,24 @@
 <template>
-    <tree id="project-tree" ref="tree" :data="projectTreeData">
-        <span class="tree-text" slot-scope="{ node }">
-            <template v-if="!node.data.type">
-                <i class="fa" :class="[node.expanded() ? 'fa-folder-open' : 'fa-folder']"></i>
-                {{ node.text }}
-            </template>
-            <template v-if="node.data.type">
-                <div class="tree-node-content" :class="{ 'is-selected-node': node == selectedNode }">
-                    <span :node-type="node.data.type.id" class="tag tree-node-element"></span>{{node.text}}
-                </div>
-            </template>
-        </span>
-    </tree>
+    <div>
+        <p class="notification is-info">Project Structure</p>
+
+        <section class="p-sm">
+            <tree id="project-tree" ref="tree" :data="projectTreeData">
+                <span class="tree-text" slot-scope="{ node }">
+                    <template v-if="!node.data.type">
+                        <i class="fa" :class="[node.expanded() ? 'fa-folder-open' : 'fa-folder']"></i>
+                        {{ node.text }}
+                    </template>
+                    <template v-if="node.data.type">
+                        <div class="tree-node-content" :class="{ 'is-selected-node': node == selectedNode }">
+                            <span :node-type="node.data.type.id" class="tag tree-node-element"></span>{{node.text}}
+                        </div>
+                    </template>
+                </span>
+            </tree>
+        </section>
+    </div>
+
 </template>
 
 <script lang="ts">
@@ -95,13 +102,30 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+    .project-structure-section
+    {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
     #project-tree
     {
         width: 100%;
 
-        .tree-node-content.is-selected-node
+        .tree-anchor
         {
-            background-color: rgba(0,0,0,0.5);
+            color: wheat;
+        }
+
+        .tree-node-content
+        {
+            color: white;
+
+            &.is-selected-node
+            {
+                background-color: rgba(0,0,0,0.5);
+            }
         }
     }
 
