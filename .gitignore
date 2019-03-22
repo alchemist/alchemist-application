@@ -30,3 +30,4 @@ public/assemblies/
 __IGNORE__\.js
 
 plugins/
+/stats.json
