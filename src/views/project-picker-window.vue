@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <div class="is-danger box" v-if="validationGroup != null && !isValid" v-validation-summary="validationGroup"></div>
-                        <button class="button is-primary" @click="createNewProject()">Create</button>
+                        <button class="button is-primary" :disabled="!isValid" @click="createNewProject()">Create</button>
                         <button class="button" @click="showProjectModal = false">Cancel</button>
                     </div>
                 </article>

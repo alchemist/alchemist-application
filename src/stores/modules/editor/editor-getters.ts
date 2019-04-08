@@ -24,4 +24,14 @@ export class EditorGetters
             return {};
         }
     };
+
+    public hasNodeErrors = (state: EditorState) => {
+        return (nodeId: string) => {
+            return state.nodeErrors.hasOwnProperty(nodeId);
+        }
+    }
+
+    public hasProjectErrors = (state: EditorState) => {
+        return Object.keys(state.nodeErrors).length > 0;
+    }
 }

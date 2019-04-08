@@ -6,16 +6,17 @@
             <tree id="project-tree" ref="tree" :data="projectTreeData">
                 <span class="tree-text" slot-scope="{ node }">
                     <template v-if="node.data.isRoot === true">
-                        <i class="fa fa-project-diagram is-root"></i>
-                        {{ node.text }}
+                        <i class="fa fa-project-diagram has-text-primary"></i>
+                        <span class="has-text-primary">{{ node.text }}</span>
                     </template>
                     <template v-else-if="!node.data.type">
                         <i class="fa" :class="[node.expanded() ? 'fa-folder-open' : 'fa-folder']"></i>
-                        {{ node.text }}
+                        <span>{{ node.text }}</span>
                     </template>
                     <template v-if="node.data.type">
-                        <div class="tree-node-content" :class="{ 'is-selected-node': node == selectedNode }">
-                            <span :node-type="node.data.type.id" class="tag tree-node-element"></span>{{node.text}}
+                        <div class="tree-node-content" :class="{ 'is-selected-node': node == selectedNode, 'has-error': hasNodeErrors(node.data.id) }">
+                            <span :node-type="node.data.type.id" class="tag tree-node-element"></span>
+                            <span>{{ node.text }}</span>
                         </div>
                     </template>
                 </span>
@@ -29,7 +30,7 @@
 
 import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
 import {IProject, INodeGroup, INode} from "@alchemist/core";
-import { Mutation, State } from "vuex-class";
+import { Mutation, State, Getter } from "vuex-class";
 import Tree from "liquor-tree";
 
 @Component({
@@ -45,6 +46,9 @@ export default class extends Vue {
 
     @State(state => state.editor.selectedNode)
     public selectedNode;
+
+    @Getter("hasNodeErrors")
+    public hasNodeErrors;
 
     @Watch("selectedNode")
     public updateSelection(newNode: INode)
@@ -128,6 +132,12 @@ export default class extends Vue {
             {
                 background-color: rgba(0,0,0,0.5);
             }
+        }
+
+        .has-error
+        {
+            .tree-node-element { border: 1px solid red; }
+            color: red;
         }
     }
 

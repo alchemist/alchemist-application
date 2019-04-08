@@ -9,7 +9,9 @@
                 </a>
             </div>
             <div class="navbar-item">
-                <a class="button tooltip" data-tooltip="Generate project code" @click="compileCode()">
+                <a class="button tooltip" :class="{ 'is-danger': hasProjectErrors, 'is-tooltip-danger': hasProjectErrors }"
+                   :data-tooltip="hasProjectErrors ? 'Cannot generate project due to errors' : 'Generate Project'"
+                   :disabled="hasProjectErrors" @click="compileCode()">
                     <span class="icon">
                       <i class="fas fa-ship"></i>
                     </span>
@@ -36,7 +38,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {Mutation, State} from "vuex-class";
+    import {Mutation, State, Getter} from "vuex-class";
     import {IProject, nodeGeneratorRegistry} from "@alchemist/core";
     import {generationManager} from "../../helpers/generation-helper"
 
@@ -51,6 +53,9 @@
 
         @State(state => state.editor.showContextSideBar)
         public isContextSidebarVisible;
+
+        @Getter("hasProjectErrors")
+        public hasProjectErrors: boolean;
 
         @State(state => state.editor.showFolderSideBar)
         public isFolderSidebarVisible;
@@ -71,6 +76,7 @@
         }
 
         public async compileCode() {
+            if(this.hasProjectErrors) { return; }
             await generationManager.generate(this.project);
             Vue["toasted"].success("Code generation complete", { duration: 3000, icon: "ship" });
         }
