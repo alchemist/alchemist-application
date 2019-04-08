@@ -44,18 +44,12 @@
                                             </li>
                                         </template>
 
-                                        <li class="m-sm p-sm has-background-light">
-                                            <span class="tag is-dark">ecsrx</span>
-                                            <span class="m-l-md">EcsRx Unity Project</span>
-                                        </li>
-                                        <li class="m-sm p-sm has-background-light">
-                                            <span class="tag is-dark">ecsrx</span>
-                                            <span class="m-l-md">EcsRx MG Project</span>
-                                        </li>
-                                        <li class="m-sm p-sm has-background-light">
-                                            <span class="tag is-dark">mvc</span>
-                                            <span class="m-l-md">ASP MVC Project</span>
-                                        </li>
+                                        <template v-if="projectTemplates.length == 0">
+                                            <li class="m-sm p-sm">
+                                                <p>No Project Templates registered</p>
+                                                <p>Please ensure you have added relevant plugins to the application</p>
+                                            </li>
+                                        </template>
 
                                     </ul>
                                 </div>

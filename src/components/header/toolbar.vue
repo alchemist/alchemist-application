@@ -71,7 +71,7 @@
         }
 
         public async compileCode() {
-            await generationManager.generateAll(this.project);
+            await generationManager.generate(this.project);
             Vue["toasted"].success("Code generation complete", { duration: 3000, icon: "ship" });
         }
     }

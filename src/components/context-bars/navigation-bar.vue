@@ -5,7 +5,11 @@
         <section class="p-sm">
             <tree id="project-tree" ref="tree" :data="projectTreeData">
                 <span class="tree-text" slot-scope="{ node }">
-                    <template v-if="!node.data.type">
+                    <template v-if="node.data.isRoot === true">
+                        <i class="fa fa-project-diagram is-root"></i>
+                        {{ node.text }}
+                    </template>
+                    <template v-else-if="!node.data.type">
                         <i class="fa" :class="[node.expanded() ? 'fa-folder-open' : 'fa-folder']"></i>
                         {{ node.text }}
                     </template>
@@ -61,7 +65,8 @@ export default class extends Vue {
     public get projectTreeData()
     {
         const rootNode = {
-            text: this.project.projectName,
+            text: "Project",
+            data: { isRoot: true },
             children: []
         };
 
@@ -113,10 +118,7 @@ export default class extends Vue {
     {
         width: 100%;
 
-        .tree-anchor
-        {
-            color: wheat;
-        }
+        .tree-anchor { color: wheat; }
 
         .tree-node-content
         {

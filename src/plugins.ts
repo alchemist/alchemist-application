@@ -33,7 +33,8 @@ const registerNodes = () => {
 const initPlugin = async (plugin: IPlugin) =>
 {
   console.log(`Loading Plugin: ${plugin.name} | ${plugin.version}`);
-  await plugin.setup(pluginContext)
+  await plugin.setup(pluginContext);
+  console.log(`Loaded Plugin: ${plugin.name} | ${plugin.version} Successfully`);
 };
 
 const scanForPlugins = async (): Promise<string[]> => {

@@ -13,10 +13,10 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "@treacherous/core": "^0.17.6",
-    "@treacherous/decorators": "^0.2.3",
-    "@treacherous/view": "^0.4.3",
-    "@treacherous/vue": "^0.3.3",
+    "@treacherous/core": "^0.17.7",
+    "@treacherous/decorators": "^0.2.4",
+    "@treacherous/view": "^0.4.4",
+    "@treacherous/vue": "^0.3.4",
     "@alchemist/core": "^0.2.1",
     "@fortawesome/fontawesome-free": "^5.7.2",
     "bulma": "^0.7.4",
