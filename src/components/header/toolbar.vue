@@ -19,16 +19,16 @@
             </div>
             <hr class="navbar-divider">
             <div class="navbar-item">
-                <a class="button tooltip" data-tooltip="Show codegen preview bar" :class="{'is-success': isContextSidebarVisible}" @click="showContextSideBar(!isContextSidebarVisible)">
+                <a class="button tooltip" data-tooltip="Show folder exporer bar" :class="{'is-success': isFolderSidebarVisible}" @click="showFolderSideBar(!isFolderSidebarVisible)">
                     <span class="icon">
-                      <i class="fas fa-columns"></i>
+                      <i class="fas fa-project-diagram"></i>
                     </span>
                 </a>
             </div>
             <div class="navbar-item">
-                <a class="button tooltip" data-tooltip="Show folder exporer bar" :class="{'is-success': isFolderSidebarVisible}" @click="showFolderSideBar(!isFolderSidebarVisible)">
+                <a class="button tooltip" data-tooltip="Show codegen preview bar" :class="{'is-success': isContextSidebarVisible}" @click="showContextSideBar(!isContextSidebarVisible)">
                     <span class="icon">
-                      <i class="fas fa-columns"></i>
+                      <i class="fas fa-code"></i>
                     </span>
                 </a>
             </div>

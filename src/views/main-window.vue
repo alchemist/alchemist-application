@@ -4,7 +4,7 @@
             <div class="header-section" ref="headerElement">
                 <main-menu></main-menu>
                 <toolbar></toolbar>
-                <node-group-tabs></node-group-tabs>
+                <!--<node-group-tabs></node-group-tabs>-->
             </div>
         </div>
         <div id="main-area" class="hero-body m-none p-none is-fullwidth is-fullheight">
@@ -127,6 +127,9 @@ export default class extends Vue {
     #side-bar-left
     {
         display: flex;
-        width: 20em;
+        width: 25em;
+
+        &>div
+        { width: 100%; }
     }
 </style>

@@ -50,6 +50,12 @@ export default class extends Vue {
     @Getter("hasNodeErrors")
     public hasNodeErrors;
 
+    @Mutation('selectGroup')
+    public selectGroup;
+
+    @State(state => state.editor.selectedGroupIndex)
+    public selectedGroupIndex: number;
+
     @Watch("selectedNode")
     public updateSelection(newNode: INode)
     {
@@ -74,19 +80,28 @@ export default class extends Vue {
             children: []
         };
 
-        for(const nodeGroup of this.project.nodeGroups)
+        for(let i=0;i<this.project.nodeGroups.length;i++)
         {
-            const childNode = this.generateTreeDataForNodeGroup(nodeGroup);
+            const nodeGroup = this.project.nodeGroups[i];
+            const childNode = this.generateTreeDataForNodeGroup(nodeGroup, i);
             rootNode.children.push(childNode);
         }
 
         return rootNode;
     }
 
-    private generateTreeDataForNodeGroup(nodeGroup: INodeGroup)
+    public get selectedNodeGroup(): INodeGroup{
+        if(this.project.nodeGroups.length <= this.selectedGroupIndex)
+        { return null; }
+
+        return this.project.nodeGroups[this.selectedGroupIndex];
+    }
+
+    private generateTreeDataForNodeGroup(nodeGroup: INodeGroup, nodeGroupIndex: number)
     {
         const treeNode: any = {
                 text: nodeGroup.displayName,
+                data: { groupIndex: nodeGroupIndex },
                 children: []
         };
 
@@ -99,13 +114,30 @@ export default class extends Vue {
         return treeNode;
     }
 
+    private onNodeDoubleClicked = (node) => {
+        if(node.data.groupIndex >= 0) {
+            this.selectGroup(node.data.groupIndex);
+            this.changeSelectedNode(null);
+        }
+    }
+
+    private onNodeSelected = (node) => {
+        if(!node.data.id) { return; }
+
+        const parentGroupIndex = node.parent.data.groupIndex;
+        if(parentGroupIndex >= 0) {
+            if(parentGroupIndex != this.selectedGroupIndex)
+            { this.selectGroup(parentGroupIndex); }
+        }
+
+        this.changeSelectedNode(node.data);
+    }
+
     public mounted()
     {
         const tree = (<any>this.$refs.tree);
-        tree.$on("node:selected", (node) => {
-            if(!node.data.id) { return; }
-            this.changeSelectedNode(node.data);
-        });
+        tree.$on("node:selected", this.onNodeSelected);
+        tree.$on("node:dblclick", this.onNodeDoubleClicked);
     }
 }
 </script>

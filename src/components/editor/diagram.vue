@@ -1,5 +1,13 @@
 <template>
     <div id="diagram-container" @click.left.stop="deselectNode($event)" @contextmenu.prevent="$refs.menu.open">
+        <div id="workspace-info">
+            <nav class="breadcrumb is-large" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="#">{{project.projectName}}</a></li>
+                    <li><a href="#" class="is-active" aria-current="page">{{selectedNodeGroup.displayName}}</a></li>
+                </ul>
+            </nav>
+        </div>
         <virtual-workspace id="diagram-content" ref="diagramContent" :workspace-config="selectedNodeGroup.workspaceConfig">
             <template slot="content" v-for="node in selectedNodeGroup.nodes" >
                 <component class="component-instance" v-bind:is="node.type.id" :node="node"></component>
@@ -33,7 +41,7 @@
       INodeGroup,
       projectRegistry
     } from "@alchemist/core";
-    import {State} from "vuex-class";
+    import {Mutation, State} from "vuex-class";
     import { VueContext } from 'vue-context';
     import {default as VirtualWorkspace} from "./virtual-workspace.vue";
 
@@ -50,6 +58,9 @@
 
         @State(state => state.editor.headerHeight)
         public headerHeight: number;
+
+        @Mutation('selectNode')
+        public changeSelectedNode;
 
         public compatibleNodes: NodeEntry[] = [];
 
@@ -114,8 +125,7 @@
 
         public deselectNode(evt)
         {
-            this.$store.commit('selectNode', null);
-
+            this.changeSelectedNode(null);
             //this.createDotAtPoint(evt);
         }
 
@@ -141,6 +151,20 @@
         height: 10px;
         border: 2px solid #FFF;
         background-color: #FF0000;
+    }
+
+    #workspace-info
+    {
+        position: absolute;
+        display: block;
+        z-index: 10000;
+        padding: 2em;
+
+        li
+        {
+            color: rgba(255,255,255,0.5);
+            font-weight: bold;
+        }
     }
 
     #diagram-container
