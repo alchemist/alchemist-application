@@ -34,12 +34,12 @@
 <script lang="ts">
     import {Vue, Component} from "vue-property-decorator";
     import {
-      IProject,
-      NodeEntry,
-      nodeRegistry,
-      Point,
-      INodeGroup,
-      projectRegistry
+        IProject,
+        NodeEntry,
+        nodeRegistry,
+        Point,
+        INodeGroup,
+        projectRegistry, NodeGroupEntry
     } from "@alchemist/core";
     import {Mutation, State} from "vuex-class";
     import { VueContext } from 'vue-context';

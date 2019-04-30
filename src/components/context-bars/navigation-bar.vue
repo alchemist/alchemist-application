@@ -3,6 +3,7 @@
         <p class="notification is-info">Project Structure</p>
 
         <section class="p-sm">
+            <a class="button is-primary" @click="showNodeGroupModal = true">Add New Group</a>
             <tree id="project-tree" ref="tree" :data="projectTreeData">
                 <span class="tree-text" slot-scope="{ node }">
                     <template v-if="node.data.isRoot === true">
@@ -22,19 +23,64 @@
                 </span>
             </tree>
         </section>
+        <div id="node-group-creator-modal" class="modal" :class="{ 'is-active': showNodeGroupModal }">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <article class="message is-dark">
+                    <div class="message-header">
+                        <p>Create Node Group</p>
+                    </div>
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">Group Name</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Group name" v-model="nodeGroupForm.groupName" />
+                            </div>
+                        </div>
+                        <button class="button is-primary" :disabled="!isValid" @click="createNewNodeGroup()">Create</button>
+                        <button class="button" @click="showNodeGroupModal = false">Cancel</button>
+                    </div>
+                </article>
+            </div>
+        </div>
     </div>
-
 </template>
 
 <script lang="ts">
 
 import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
-import {IProject, INodeGroup, INode} from "@alchemist/core";
+import {
+    IProject,
+    INodeGroup,
+    INode,
+    NodeEntry,
+    NodeGroupEntry,
+    projectRegistry,
+    nodeRegistry,
+    nodeGroupRegistry
+} from "@alchemist/core";
 import { Mutation, State, Getter } from "vuex-class";
 import Tree from "liquor-tree";
+import {createRulesetFor, required, withDisplayName} from "@treacherous/decorators";
+import {createRuleset} from "@treacherous/core";
+import {ValidateWith} from "@treacherous/vue";
+
+class NodeGroupForm
+{
+    @required()
+    @withDisplayName("Group Name")
+    public groupName = "";
+}
+
+const nodeGroupRuleset = createRulesetFor(NodeGroupForm);
+const componentRuleset = createRuleset()
+    .forProperty("nodeGroupForm")
+    .addRuleset(nodeGroupRuleset)
+    .build();
 
 @Component({
-    components: {Tree}
+    components: {Tree},
+    mixins: [ValidateWith(componentRuleset, { withReactiveValidation: true, validateOnStart: true })]
 })
 export default class extends Vue {
 
@@ -56,6 +102,12 @@ export default class extends Vue {
     @State(state => state.editor.selectedGroupIndex)
     public selectedGroupIndex: number;
 
+    public showNodeGroupModal = false;
+    public nodeGroupForm = new NodeGroupForm();
+
+    public compatibleNodes: NodeEntry[] = [];
+    public compatibleNodeGroups: NodeGroupEntry[] = [];
+
     @Watch("selectedNode")
     public updateSelection(newNode: INode)
     {
@@ -71,23 +123,24 @@ export default class extends Vue {
       selection.select(true);
     }
 
-    @Watch("project")
-    public get projectTreeData()
-    {
-        const rootNode = {
-            text: "Project",
-            data: { isRoot: true },
-            children: []
-        };
+    public projectTreeData =  {
+        text: "Project",
+        data: { isRoot: true },
+        children: []
+    };
 
+    @Watch("project")
+    public refreshProjectTree()
+    {
+        this.projectTreeData.children.length = 0;
         for(let i=0;i<this.project.nodeGroups.length;i++)
         {
             const nodeGroup = this.project.nodeGroups[i];
             const childNode = this.generateTreeDataForNodeGroup(nodeGroup, i);
-            rootNode.children.push(childNode);
+            this.projectTreeData.children.push(childNode);
         }
 
-        return rootNode;
+        (<any>this.$refs.tree).setModel(this.projectTreeData);
     }
 
     public get selectedNodeGroup(): INodeGroup{
@@ -138,6 +191,30 @@ export default class extends Vue {
         const tree = (<any>this.$refs.tree);
         tree.$on("node:selected", this.onNodeSelected);
         tree.$on("node:dblclick", this.onNodeDoubleClicked);
+
+        const projectEntry = projectRegistry.getProject(this.project.projectType);
+        const compatibleNodeTypes = projectEntry.projectDescriptor.compatibleNodeTypeIds;
+        const availableNodes = nodeRegistry.getNodes();
+        this.compatibleNodes = availableNodes.filter(x => compatibleNodeTypes.indexOf(x.nodeTypeId) >= 0);
+
+        const compatibleNodeGroupTypes = projectEntry.projectDescriptor.compatibleNodeGroupTypeIds;
+        const availableNodeGroups = nodeGroupRegistry.getNodeGroups();
+        this.compatibleNodeGroups = availableNodeGroups.filter(x => compatibleNodeGroupTypes.indexOf(x.nodeGroupTypeId) >= 0);
+
+        this.refreshProjectTree();
+    }
+
+    public async createNewNodeGroup() {
+        const isValid = await (<any>this).validationGroup.validate();
+        if(!isValid) { return; }
+
+        const nodeGroupType = this.compatibleNodeGroups[0];
+        const newNodeGroup = nodeGroupType.nodeGroupFactory.create(nodeGroupType.nodeGroupTypeId, this.nodeGroupForm.groupName);
+        console.log(`CREATING NEW GROUP ${this.nodeGroupForm.groupName}`);
+        this.project.nodeGroups.push(newNodeGroup);
+        this.showNodeGroupModal = false;
+
+        this.refreshProjectTree();
     }
 }
 </script>

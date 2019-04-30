@@ -10,7 +10,7 @@ import {
   nodeGeneratorRegistry,
   projectRegistry,
   PluginContext,
-  codeProcessorRegistry, projectGeneratorRegistry
+  codeProcessorRegistry, projectGeneratorRegistry, nodeGroupRegistry
 } from "@alchemist/core";
 
 const paths: any = remote.getGlobal("paths");
@@ -19,6 +19,7 @@ console.log("PATHS", paths);
 export const pluginContext: PluginContext = {
   codeProcessorRegistry: codeProcessorRegistry,
   nodeGeneratorRegistry: nodeGeneratorRegistry,
+  nodeGroupRegistry: nodeGroupRegistry,
   nodeRegistry: nodeRegistry,
   projectGeneratorRegistry: projectGeneratorRegistry,
   projectRegistry: projectRegistry,
