@@ -44,6 +44,8 @@
     import {Mutation, State} from "vuex-class";
     import { VueContext } from 'vue-context';
     import {default as VirtualWorkspace} from "./virtual-workspace.vue";
+    import {EditorEvents} from "../../events/editor-events";
+    import {eventBus} from "../../events/event-bus";
 
     @Component({
         components: {VueContext, VirtualWorkspace}
@@ -108,6 +110,7 @@
             console.log(`Creating Node [${node.nodeTypeId}] @ x: ${position.x}, y: ${position.y}`);
             const newNode = node.nodeFactory.create(node.nodeTypeId, position);
             this.project.nodeGroups[this.selectedGroupIndex].nodes.push(newNode);
+            eventBus.publish(EditorEvents.NodeAddedEvent, newNode, this);
         }
 
         public createDotAtPoint(evt)

@@ -64,6 +64,8 @@ import Tree from "liquor-tree";
 import {createRulesetFor, required, withDisplayName} from "@treacherous/decorators";
 import {createRuleset} from "@treacherous/core";
 import {ValidateWith} from "@treacherous/vue";
+import {EditorEvents} from "../../events/editor-events";
+import {eventBus} from "../../events/event-bus";
 
 class NodeGroupForm
 {
@@ -129,7 +131,6 @@ export default class extends Vue {
         children: []
     };
 
-    @Watch("project")
     public refreshProjectTree()
     {
         this.projectTreeData.children.length = 0;
@@ -202,6 +203,15 @@ export default class extends Vue {
         this.compatibleNodeGroups = availableNodeGroups.filter(x => compatibleNodeGroupTypes.indexOf(x.nodeGroupTypeId) >= 0);
 
         this.refreshProjectTree();
+
+        eventBus.subscribe(EditorEvents.NodeAddedEvent, this.refreshProjectTree);
+        eventBus.subscribe(EditorEvents.GroupAddedEvent, this.refreshProjectTree);
+    }
+
+    public beforeDestroy()
+    {
+        eventBus.unsubscribe(EditorEvents.NodeAddedEvent, this.refreshProjectTree);
+        eventBus.unsubscribe(EditorEvents.GroupAddedEvent, this.refreshProjectTree);
     }
 
     public async createNewNodeGroup() {
@@ -212,9 +222,8 @@ export default class extends Vue {
         const newNodeGroup = nodeGroupType.nodeGroupFactory.create(nodeGroupType.nodeGroupTypeId, this.nodeGroupForm.groupName);
         console.log(`CREATING NEW GROUP ${this.nodeGroupForm.groupName}`);
         this.project.nodeGroups.push(newNodeGroup);
+        eventBus.publish(EditorEvents.GroupAddedEvent, newNodeGroup, this);
         this.showNodeGroupModal = false;
-
-        this.refreshProjectTree();
     }
 }
 </script>
