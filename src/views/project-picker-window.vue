@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="is-danger box" v-if="validationGroup != null && !isValid" v-validation-summary="validationGroup"></div>
+                        <div class="is-danger box" v-if="!isValid" v-validation-summary="getValidationGroup()"></div>
                         <button class="button is-primary" :disabled="!isValid" @click="createNewProject()">Create</button>
                         <button class="button" @click="showProjectModal = false">Cancel</button>
                     </div>
@@ -166,7 +166,7 @@ export default class extends Vue {
     }
 
     public async createNewProject() {
-        const isValid = await (<any>this).validationGroup.validate();
+        const isValid = await (<any>this).getValidationGroup().validate();
         if(!isValid) { return; }
 
         const projectEntry = this.selectedProjectEntry;
