@@ -205,7 +205,7 @@ export default class extends Vue {
     }
 
     public async createNewNodeGroup() {
-        const isValid = await (<any>this).validationGroup.validate();
+        const isValid = await (<any>this).getValidationGroup().validate();
         if(!isValid) { return; }
 
         const nodeGroupType = this.compatibleNodeGroups[0];

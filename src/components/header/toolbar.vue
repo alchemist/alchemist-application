@@ -67,6 +67,7 @@
         public showFolderSideBar;
 
         public async saveProject() {
+            console.log("project raw", this.project);
             const projectJson = JSON.stringify(this.project, null, 2);
             console.log("project", projectJson);
 
