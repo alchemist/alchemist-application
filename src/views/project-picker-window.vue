@@ -18,9 +18,9 @@
                     </div>
                 </article>
                 <a class="button is-primary m-sm" @click="showProjectModal = true">Create New Project</a>
-                <!--
-                <a class="button is-primary m-sm" @click="createNewProject()">Create New Project</a>
                 <a class="button is-info m-sm" @click="openExistingProject()">Or Open Existing Project</a>
+
+                <!--
                 <a class="button is-info m-sm" @click="openExampleProject()">Or View Example Project</a>-->
             </div>
         </div>
@@ -105,6 +105,7 @@ import { createRulesetFor, required, withDisplayName, regex } from "@treacherous
 import { createRuleset, ValidateWith } from "@treacherous/vue";
 
 const {dialog} = remote;
+const fs = remote.require('fs-extra');
 
 class ProjectForm
 {
@@ -175,7 +176,32 @@ export default class extends Vue {
         this.loadProject(project);
 
         console.log("loading project", project);
-        router.push('editor');
+        await router.push('editor');
+    }
+
+    public async openExistingProject() {
+        const result = dialog.showOpenDialog(
+            {
+                properties: ['openFile'],
+                filters: [
+                    { name: "Alchemist Diagrams", extensions: ["diagram"] }
+                ]
+            }
+        );
+
+        if(result.length == 0 || !result[0])
+        { return; }
+
+        const diagramFile = result[0];
+        const projectData = await fs.readJson(diagramFile);
+
+        const projectEntry = projectRegistry.getProject(projectData.projectType);
+        const project = projectEntry.projectSerializer.deserialize(projectData);
+
+        this.loadProject(project);
+
+        console.log("loading project", project);
+        await router.push('editor');
     }
 
 /*
@@ -187,10 +213,7 @@ export default class extends Vue {
         router.push('editor');
     }
 
-    public openExistingProject() {
-        const directory = dialog.showOpenDialog({properties: ['openDirectory']});
-        console.log(directory);
-    }
+
 
     public openExampleProject() {
         const directory = dialog.showOpenDialog({properties: ['openDirectory']})[0];

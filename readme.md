@@ -21,6 +21,10 @@ Once installed you create a project based on the available project templates (th
 
 Currently there is only an EcsRx plugin which allows you to create ECS related nodes for that project, however the eco system has been developed as an open platform for anyone to create their own code generation plugins.
 
+## Plugins
+
+Alchemist requires plugins to create content and generate code, so make sure you have a `plugins` folder and have included any of the plugins you need.
+
 ### I NEED HELP!
 
 Go to the discord channel and ask for help there in the Alchemist room, this project is purely a prototype at the moment and will be so for a while.
