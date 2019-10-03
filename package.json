@@ -17,7 +17,7 @@
     "@treacherous/decorators": "^0.2.4",
     "@treacherous/view": "^0.4.4",
     "@treacherous/vue": "^0.4.2",
-    "@alchemist/core": "^0.5.1",
+    "@alchemist/core": "^0.5.6",
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bulma": "^0.7.5",
     "bulmaswatch": "^0.7.5",

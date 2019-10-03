@@ -39,7 +39,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Mutation, State, Getter} from "vuex-class";
-    import {IProject, nodeGeneratorRegistry} from "@alchemist/core";
+    import {IProject, nodeGeneratorRegistry, projectRegistry} from "@alchemist/core";
     import {generationManager} from "../../helpers/generation-helper"
 
     import { remote } from 'electron';
@@ -67,8 +67,10 @@
         public showFolderSideBar;
 
         public async saveProject() {
+            const projectEntry = projectRegistry.getProject(this.project.projectType);
             console.log("project raw", this.project);
-            const projectJson = JSON.stringify(this.project, null, 2);
+
+            const projectJson = projectEntry.projectSerializer.serialize(this.project);
             console.log("project", projectJson);
 
             await fs.writeFile(`${this.project.outputDirectory}/project.diagram`, projectJson);
