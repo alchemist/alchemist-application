@@ -32,6 +32,14 @@
                     </span>
                 </a>
             </div>
+            <hr class="navbar-divider">
+            <div class="navbar-item">
+                <a class="button tooltip is-warning" data-tooltip="LOG PROJECT" @click="dumpProject">
+                    <span class="icon">
+                      <i class="fas fa-code"></i>
+                    </span>
+                </a>
+            </div>
         </div>
     </nav>
 </template>
@@ -82,6 +90,11 @@
             if(this.hasProjectErrors) { return; }
             await generationManager.generate(this.project);
             Vue["toasted"].success("Code generation complete", { duration: 3000, icon: "ship" });
+        }
+
+        public dumpProject()
+        {
+            console.log(this.project);
         }
     }
 

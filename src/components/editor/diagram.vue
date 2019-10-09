@@ -1,7 +1,7 @@
 <template>
     <div id="diagram-container" @click.left.stop="deselectNode($event)" @contextmenu.prevent="$refs.menu.open">
         <div id="workspace-info">
-            <nav class="breadcrumb is-large" aria-label="breadcrumbs">
+            <nav class="breadcrumb is-large tag is-light" aria-label="breadcrumbs">
                 <ul>
                     <li><a href="#">{{project.projectName}}</a></li>
                     <li><a href="#" class="is-active" aria-current="page">{{selectedNodeGroup.displayName}}</a></li>
@@ -39,7 +39,7 @@
         nodeRegistry,
         Point,
         INodeGroup,
-        projectRegistry, NodeGroupEntry
+        projectRegistry, NodeGroupEntry, INode
     } from "@alchemist/core";
     import {Mutation, State} from "vuex-class";
     import { VueContext } from 'vue-context';
@@ -132,6 +132,11 @@
             //this.createDotAtPoint(evt);
         }
 
+        private onNodeDeleted(node: INode)
+        {
+            const nodes = this.selectedNodeGroup;
+        }
+
         public mounted()
         {
           const projectEntry = projectRegistry.getProject(this.project.projectType);
@@ -139,7 +144,15 @@
           const availableNodes = nodeRegistry.getNodes();
           this.compatibleNodes = availableNodes.filter(x => compatibleNodeTypes.indexOf(x.nodeTypeId) >= 0);
           console.log("COMPATIBLE", this.compatibleNodes, availableNodes);
+
+            eventBus.subscribe(EditorEvents.NodeRemovedEvent, this.onNodeDeleted);
         }
+
+        public beforeDestroy()
+        {
+            eventBus.unsubscribe(EditorEvents.NodeRemovedEvent, this.onNodeDeleted);
+        }
+
     }
 </script>
 

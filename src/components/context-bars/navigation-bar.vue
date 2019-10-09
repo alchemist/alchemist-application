@@ -4,7 +4,7 @@
 
         <section class="p-sm">
             <a class="button is-primary" @click="showNodeGroupModal = true">Add New Group</a>
-            <tree id="project-tree" ref="tree" :data="projectTreeData">
+            <tree id="project-tree" ref="tree" :data="projectTreeData" :options="{ deletion: onNodeDeleted }">
                 <span class="tree-text" slot-scope="{ node }">
                     <template v-if="node.data.isRoot === true">
                         <i class="fa fa-project-diagram has-text-primary"></i>
@@ -23,26 +23,7 @@
                 </span>
             </tree>
         </section>
-        <div id="node-group-creator-modal" class="modal" :class="{ 'is-active': showNodeGroupModal }">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <article class="message is-dark">
-                    <div class="message-header">
-                        <p>Create Node Group</p>
-                    </div>
-                    <div class="message-body">
-                        <div class="field">
-                            <label class="label">Group Name</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="Group name" v-model="nodeGroupForm.groupName" />
-                            </div>
-                        </div>
-                        <button class="button is-primary" :disabled="!isValid" @click="createNewNodeGroup()">Create</button>
-                        <button class="button" @click="showNodeGroupModal = false">Cancel</button>
-                    </div>
-                </article>
-            </div>
-        </div>
+        <node-group-modal :is-active="showNodeGroupModal" :project="project" @node-group-created="onNodeGroupCreated"></node-group-modal>
     </div>
 </template>
 
@@ -54,35 +35,19 @@ import {
     INodeGroup,
     INode,
     NodeEntry,
-    NodeGroupEntry,
     projectRegistry,
     nodeRegistry,
-    nodeGroupRegistry
 } from "@alchemist/core";
 import { Mutation, State, Getter } from "vuex-class";
 import Tree from "liquor-tree";
-import {createRulesetFor, required, withDisplayName} from "@treacherous/decorators";
-import {createRuleset} from "@treacherous/core";
-import {ValidateWith} from "@treacherous/vue";
+
 import {EditorEvents} from "../../events/editor-events";
 import {eventBus} from "../../events/event-bus";
 
-class NodeGroupForm
-{
-    @required()
-    @withDisplayName("Group Name")
-    public groupName = "";
-}
-
-const nodeGroupRuleset = createRulesetFor(NodeGroupForm);
-const componentRuleset = createRuleset()
-    .forProperty("nodeGroupForm")
-    .addRuleset(nodeGroupRuleset)
-    .build();
+import {default as NodeGroupModal} from "../modals/node-group-creator-modal.vue";
 
 @Component({
-    components: {Tree},
-    mixins: [ValidateWith(componentRuleset, { withReactiveValidation: true, validateOnStart: true })]
+    components: {Tree, NodeGroupModal}
 })
 export default class extends Vue {
 
@@ -105,10 +70,8 @@ export default class extends Vue {
     public selectedGroupIndex: number;
 
     public showNodeGroupModal = false;
-    public nodeGroupForm = new NodeGroupForm();
 
     public compatibleNodes: NodeEntry[] = [];
-    public compatibleNodeGroups: NodeGroupEntry[] = [];
 
     @Watch("selectedNode")
     public updateSelection(newNode: INode)
@@ -175,6 +138,29 @@ export default class extends Vue {
         }
     }
 
+    private onNodeDeleted = (node) => {
+        if(!node.data.id) { return; }
+
+        const nodeData : INode = node.data;
+        if(confirm(`Are you sure you want to delete "${nodeData.data.name}"?`))
+        {
+            this.deleteNode(node.data);
+            return true;
+        }
+
+        return false;
+    }
+
+    private deleteNode(node: INode)
+    {
+        const containingNodeGroup = this.project.nodeGroups.find(x => x.nodes.some(y => y.id == node.id));
+        const indexOfNode = containingNodeGroup.nodes.findIndex(x => x.id == node.id);
+        containingNodeGroup.nodes.splice(indexOfNode, 1);
+
+        this.changeSelectedNode(null);
+        eventBus.publish(EditorEvents.NodeRemovedEvent, node, this);
+    }
+
     private onNodeSelected = (node) => {
         if(!node.data.id) { return; }
 
@@ -185,6 +171,14 @@ export default class extends Vue {
         }
 
         this.changeSelectedNode(node.data);
+    }
+
+    public onNodeGroupCreated(nodeGroup: INodeGroup)
+    {
+        console.log(`CREATING NEW GROUP ${nodeGroup.displayName}`);
+        this.project.nodeGroups.push(nodeGroup);
+        eventBus.publish(EditorEvents.GroupAddedEvent, nodeGroup, this);
+        this.showNodeGroupModal = false;
     }
 
     public mounted()
@@ -198,10 +192,6 @@ export default class extends Vue {
         const availableNodes = nodeRegistry.getNodes();
         this.compatibleNodes = availableNodes.filter(x => compatibleNodeTypes.indexOf(x.nodeTypeId) >= 0);
 
-        const compatibleNodeGroupTypes = projectEntry.projectDescriptor.compatibleNodeGroupTypeIds;
-        const availableNodeGroups = nodeGroupRegistry.getNodeGroups();
-        this.compatibleNodeGroups = availableNodeGroups.filter(x => compatibleNodeGroupTypes.indexOf(x.nodeGroupTypeId) >= 0);
-
         this.refreshProjectTree();
 
         eventBus.subscribe(EditorEvents.NodeAddedEvent, this.refreshProjectTree);
@@ -214,17 +204,7 @@ export default class extends Vue {
         eventBus.unsubscribe(EditorEvents.GroupAddedEvent, this.refreshProjectTree);
     }
 
-    public async createNewNodeGroup() {
-        const isValid = await (<any>this).getValidationGroup().validate();
-        if(!isValid) { return; }
 
-        const nodeGroupType = this.compatibleNodeGroups[0];
-        const newNodeGroup = nodeGroupType.nodeGroupFactory.create(nodeGroupType.nodeGroupTypeId, this.nodeGroupForm.groupName);
-        console.log(`CREATING NEW GROUP ${this.nodeGroupForm.groupName}`);
-        this.project.nodeGroups.push(newNodeGroup);
-        eventBus.publish(EditorEvents.GroupAddedEvent, newNodeGroup, this);
-        this.showNodeGroupModal = false;
-    }
 }
 </script>
 
