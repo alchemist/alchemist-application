@@ -1,8 +1,8 @@
 <template>
     <div class="virtual-workspace" ref="container">
 
-        <virtual-scrollbar class="x-scroller" :max="maxTranslateX" :value.sync="workspaceConfig.translation.x" @change="refreshWorkspace()"></virtual-scrollbar>
-        <virtual-scrollbar class="y-scroller" :max="maxTranslateY" :value.sync="workspaceConfig.translation.y" @change="refreshWorkspace()"></virtual-scrollbar>
+        <!--<virtual-scrollbar class="x-scroller" :max="maxTranslateX" :value.sync="workspaceConfig.translation.x" @change="refreshWorkspace()"></virtual-scrollbar>-->
+        <!--<virtual-scrollbar class="y-scroller" :max="maxTranslateY" :value.sync="workspaceConfig.translation.y" @change="refreshWorkspace()"></virtual-scrollbar>-->
         <!--<virtual-scrollbar class="scale-scroller" :min="minScale" :max="maxScale" :step="scaleSpeed" :value.sync="workspaceConfig.scale" @change="refreshWorkspace()"></virtual-scrollbar>-->
 
         <div class="workspace-content" ref="workspace" @mousedown.self.left="startDrag($event)" @mousemove="mouseMoveEvent($event)" @mouseup="stopDrag($event)">
@@ -163,29 +163,33 @@
         position: relative;
         width: 100%;
         height: 100%;
-        overflow: hidden;
-    }
+        overflow: scroll;
 
-    .x-scroller
-    {
-        width: 80% !important;
-        position: absolute;
-        bottom: 0;
-        z-index: 1;
-    }
+        &::-webkit-scrollbar {
+            width: .8em;
+            height: .8em;
+            margin-bottom: 0.1em;
+            margin-right: 0.1em;
+            border-radius: 0.25em;
+        }
 
-    .y-scroller
-    {
-        position: absolute;
-        transform: rotate(90deg);
-        width: calc(100vh - 4em);
-        top: 48%;
-        left: 48%;
-        z-index: 1;
+        &::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+
+            &:active, &:hover { background: rgba(0,0, 0, 0.4); }
+        }
+
+        &::-webkit-scrollbar-thumb {
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255,255,255,0.5);
+
+            &:active, &:hover { background: rgba(255,255, 255, 0.9); }
+        }
     }
 
     .is-dragging
     {
         cursor: all-scroll;
     }
+
 </style>
