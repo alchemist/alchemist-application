@@ -1,10 +1,5 @@
 <template>
     <div class="virtual-workspace" ref="container">
-
-        <!--<virtual-scrollbar class="x-scroller" :max="maxTranslateX" :value.sync="workspaceConfig.translation.x" @change="refreshWorkspace()"></virtual-scrollbar>-->
-        <!--<virtual-scrollbar class="y-scroller" :max="maxTranslateY" :value.sync="workspaceConfig.translation.y" @change="refreshWorkspace()"></virtual-scrollbar>-->
-        <!--<virtual-scrollbar class="scale-scroller" :min="minScale" :max="maxScale" :step="scaleSpeed" :value.sync="workspaceConfig.scale" @change="refreshWorkspace()"></virtual-scrollbar>-->
-
         <div class="workspace-content" ref="workspace" @mousedown.self.left="startDrag($event)" @mousemove="mouseMoveEvent($event)" @mouseup="stopDrag($event)">
             <slot name="content">
             </slot>
@@ -13,13 +8,11 @@
 </template>
 
 <script lang="ts">
-    import {Prop, Vue, Component} from "vue-property-decorator";
+    import {Prop, Vue, Component, Watch} from "vue-property-decorator";
     import {Point, IWorkspaceConfig} from "@alchemist/core";
     import {default as VirtualScrollbar} from "./virtual-scrollbar.vue";
 
-    @Component({
-        components: {VirtualScrollbar}
-    })
+    @Component({})
     export default class extends Vue
     {
         @Prop({ default: () => { return 1.2; }})
@@ -53,6 +46,11 @@
 
         @Prop()
         public workspaceConfig: IWorkspaceConfig;
+
+        @Watch("workspaceConfig", { deep: true })
+        public workspaceUpdated() {
+            this.refreshWorkspace();
+        }
 
         private previousPosition = new Point();
         private isDragging = false;
