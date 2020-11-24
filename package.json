@@ -23,7 +23,7 @@
     "bulmaswatch": "^0.7.5",
     "bulma-extensions": "^6.2.7",
     "electron-edge-js": "^10.11.0",
-    "highlight.js": "^9.15.10",
+    "highlight.js": "^10.1.2",
     "lodash": "^4.17.15",
     "uuid": "^3.3.3",
     "vue": "^2.6.10",
